@@ -1,0 +1,87 @@
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven { url "http://repo.spring.io/snapshot" }
+}
+
+repositories {
+   flatDir {
+       dirs 'lib'
+   }
+}
+
+dependencies {
+    compile 'commons-lang:commons-lang:2.6'
+    compile name: 'creants-2x-v1'
+    compile name: 'log4j-1.2.17'
+    compile name: 'log4j-api-2.0'
+    compile name: 'log4j-core-2.0'
+    compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.8.8'
+    compile 'junit:junit:4.12'
+}
+
+compileJava.options.encoding = 'UTF-8'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+task copySrc(type: Copy){
+    from "src"
+	exclude "main/java"
+	exclude "test"
+    into "$buildDir/libs/src"
+}
+
+task copyCmd(type: Copy) {
+    from "run.bat"
+    into "$buildDir/libs"
+}
+
+task copyConfig(type: Copy) {
+    from "config"
+    into "$buildDir/libs/config"
+}
+
+task copyResource(type: Copy) {
+    from "resources"
+    into "$buildDir/libs/resources"
+}
+
+task copyZones(type: Copy) {
+    from "zones"
+    into "$buildDir/libs/zones"
+}
+
+task copyRuntimeLibs(type: Copy){
+	from configurations.runtime
+    into "runtime-lib"
+}
+
+task copyLibs(type: Copy){
+	from "runtime-lib"
+    into "$buildDir/libs/lib"
+}
+
+
+//build đầy đủ
+task fatBuild(type: Copy, dependsOn: ["jar", "copySrc", "copyResource", "copyZones", "copyConfig", "copyCmd", "copyLibs"]) {
+	description 'Build jar, copy web source, config and run bath file'
+}
+
+task fatBuildUpdateLib(type: Copy, dependsOn: ["jar", "copySrc", "copyResource", "copyZones", "copyConfig", "copyCmd", "copyRuntimeLibs", "copyLibs"]) {
+	description 'Build jar, copy web source, config and run bath file'
+}
+
+//build bản nhẹ chỉ có src
+task("litBuild", type: Copy, dependsOn: "copySrc") {
+	description 'Copy web source'
+    from configurations.runtime
+    into "$buildDir/libs/lib"
+}
+
+
