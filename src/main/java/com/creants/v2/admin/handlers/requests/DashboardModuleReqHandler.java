@@ -2,6 +2,8 @@ package com.creants.v2.admin.handlers.requests;
 
 import java.lang.management.ManagementFactory;
 import java.util.List;
+import java.util.Properties;
+import java.util.stream.Collectors;
 
 import com.creants.creants_2x.core.annotations.Instantiation;
 import com.creants.creants_2x.core.entities.Zone;
@@ -88,6 +90,16 @@ public class DashboardModuleReqHandler extends BaseAdminModuleReqHandler {
 	private static double roundToDecimals(final double d, final int c) {
 		int temp = (int) (d * Math.pow(10.0, c));
 		return temp / Math.pow(10.0, c);
+	}
+
+
+	public static void main(String[] args) {
+		Properties properties = System.getProperties();
+		List<Object> collect = properties.keySet().stream().map(key -> properties.get(key))
+				.collect(Collectors.toList());
+		for (Object object : collect) {
+			System.out.println(object);
+		}
 	}
 
 }

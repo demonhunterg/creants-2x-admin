@@ -60,9 +60,13 @@ public class LoginEvtHandler extends BaseServerEventHandler {
 				String.format(SEARCH_FORMAT, username), searchControls);
 		SearchResult searchResult = (SearchResult) enumeration.next();
 		Attributes attribs = searchResult.getAttributes();
+		paramsOut.putInt("code", 1);
 		paramsOut.putUtfString(Login.NEW_LOGIN_NAME, "admin#" + username);
+		paramsOut.putLong("accountId", -1);
 		paramsOut.putUtfString("mail", (String) attribs.get("mail").get());
-		paramsOut.putUtfString("fn", (String) attribs.get("givenname").get() + " " + (String) attribs.get("sn").get());
+		// paramsOut.putUtfString("fn", (String) attribs.get("givenname").get()
+		// + " " + (String) attribs.get("sn").get());
+		paramsOut.putUtfString("fn", (String) attribs.get("sn").get());
 		paramsOut.putUtfString("title", (String) attribs.get("title").get());
 		paramsOut.putUtfString("mobile", (String) attribs.get("mobile").get());
 		paramsOut.putUtfString("cn", (String) attribs.get("cn").get());
